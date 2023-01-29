@@ -2,11 +2,14 @@ CC=gcc
 FLAGS=-Wall -Wextra -Werror -g
 CFLAGS=-c $(FLAGS)
 UNAME := $(shell uname)
+TARGET=Widget
 
 ifeq ($(UNAME), Linux)
 	TEST_FLAGS=-lcheck -lgcov -lm -lrt -lpthread -lsubunit
+	TARGET=Widget
 else
-	TEST_FLAGS=-lcheck -lgcov -lm -lpthread
+	TEST_FLAGS=lgtest -lpthread
+	TARGET=Widget.app
 endif
 
 #SRC
@@ -67,12 +70,9 @@ $(BD)%.o: */*/%.cpp
 
 install: build
 	@mkdir -p ./Applications/ 2>/dev/null
-ifeq ($(UNAME), Linux)
-	cp -rf $(BD)/Widget ./Applications/
-else
-	cp -rf $(BD)/Widget.app ./Applications/
-endif
+	cp -rf $(BD)/$(TARGET) ./Applications/
 	make clean
+	
 
 uninstall:
 	rm -rf ./Applications/
